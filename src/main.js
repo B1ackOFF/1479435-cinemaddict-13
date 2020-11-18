@@ -1,6 +1,6 @@
 import {createUserProfileTemplate} from "./view/user-profile.js";
 import {createMenuTemplate} from "./view/menu.js";
-import {createFilmListTemplate} from "./view/films-list.js";
+import {createFilmListTemplate} from "./view/film-list.js";
 import {createTopFilmsTemplate} from "./view/top-films.js";
 import {createShowMoreTemplate} from "./view/show-more.js";
 import {createStatsTemplate} from "./view/stats.js";
