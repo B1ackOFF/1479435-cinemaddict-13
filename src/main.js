@@ -28,8 +28,6 @@ const filmsList = pageMain.querySelector(`.films-list`);
 renderHtml(filmsList, createTopFilmsTemplate(), `afterend`);
 renderHtml(filmsList, createShowMoreTemplate(), `beforeend`);
 
-////////////
-
 const filmsListContainer = filmsList.querySelector(`.films-list__container`);
 const topFilmsList = pageMain.querySelectorAll(`.films-list--extra .films-list__container`);
 
