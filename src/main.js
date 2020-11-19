@@ -8,7 +8,7 @@ import {createFilmCardTemplate} from "./view/film-card.js";
 
 
 const FILMS_COUNT = 5;
-const TOP_FILMS_COUNT = 2;
+const TOP_FILMS_COUNT = 10;
 
 const renderHtml = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
