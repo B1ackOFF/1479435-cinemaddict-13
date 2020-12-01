@@ -1,3 +1,3 @@
-export const createStatsTemplate = () => {
-  return `<p>130 291 movies inside</p>`;
+export const createStatsTemplate = (film) => {
+  return `<p>${film.length} movies inside</p>`;
 };
