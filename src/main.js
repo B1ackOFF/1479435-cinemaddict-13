@@ -8,7 +8,7 @@ import {createStatsTemplate} from "./view/stats.js";
 import {createFilmCardTemplate} from "./view/film-card.js";
 import {createPopupTemplate} from "./view/popup.js";
 import {generateTask} from "./mock/task.js";
-import {generateComment} from "./mock/comment.js";
+// import {generateComment} from "./mock/comment.js";
 
 const FILMS_COUNT = 5;
 const EXTRA_FILMS_COUNT = 2;

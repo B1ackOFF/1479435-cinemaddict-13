@@ -9,7 +9,7 @@ const limitStr = (descriptionText, maxSymbols) => {
 };
 
 export const createFilmCardTemplate = (film) => {
-  const {id, title, rating, release, duration, genre, poster, description, comments, isWatched} = film;
+  const {id, title, rating, release, duration, genre, poster, description, comments} = film;
 
   return `<article class="film-card" id="${id}">
   <h3 class="film-card__title">${title.translation}</h3>
