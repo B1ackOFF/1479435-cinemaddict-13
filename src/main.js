@@ -57,11 +57,19 @@ const clearRenderedFilms = () => {
 
 // кнопки Watchlist & History & Favorites
 
-const addFilmCardControlsItemActive = () => {
+const addFilmCardControlsItemActive = (arrays) => {
   const pageFilms = document.querySelector(`.films`);
   const watchlistButtons = pageFilms.querySelectorAll(`.film-card__controls-item--add-to-watchlist`);
   const historyButtons = pageFilms.querySelectorAll(`.film-card__controls-item--mark-as-watched`);
   const favoriteButtons = pageFilms.querySelectorAll(`.film-card__controls-item--favorite`);
+
+  /*  arrays.forEach((elem, index) => {
+    if (elem.isFavorite === true) {
+      favoriteButtons[index].classList.add(`film-card__controls-item--active`);
+    } else {
+      favoriteButtons[index].classList.remove(`film-card__controls-item--active`);
+    }
+  });*/
 
   watchlistButtons.forEach((element, index) => {
     element.addEventListener(`click`, () => {
@@ -100,7 +108,7 @@ const renderStartFilmsCards = (array) => {
 
 };
 renderStartFilmsCards(films);
-addFilmCardControlsItemActive();
+addFilmCardControlsItemActive(films);
 
 
 // Отрисовка дополнительной порции фильмов
@@ -124,7 +132,7 @@ const renderPortionFilmsCards = () => {
     filmCardPoster.setAttribute(`style`, `cursor: pointer;`);
     filmCardPoster.addEventListener(`click`, renderFilmDetail);
   }
-  addFilmCardControlsItemActive();
+  addFilmCardControlsItemActive(films);
 };
 
 showMoreButton.addEventListener(`click`, renderPortionFilmsCards);
@@ -180,6 +188,7 @@ watchlistElement.children[0].textContent = `${watchlistFilms.length}`;
 const onWatchlistElementClick = () => {
   clearRenderedFilms();
   renderStartFilmsCards(watchlistFilms);
+  addFilmCardControlsItemActive(watchlistFilms);
   showMoreButton.classList.add(`visually-hidden`);
 };
 
@@ -197,6 +206,7 @@ historyElement.children[0].textContent = `${historyFilms.length}`;
 const onHistoryElementClick = () => {
   clearRenderedFilms();
   renderStartFilmsCards(historyFilms);
+  addFilmCardControlsItemActive(historyFilms);
   showMoreButton.classList.add(`visually-hidden`);
 };
 
@@ -214,6 +224,7 @@ favoritesElement.children[0].textContent = `${ favoritesFilms.length}`;
 const onFavoritesElementClick = () => {
   clearRenderedFilms();
   renderStartFilmsCards(favoritesFilms);
+  addFilmCardControlsItemActive(favoritesFilms);
   showMoreButton.classList.add(`visually-hidden`);
 };
 
@@ -225,6 +236,7 @@ const allMovieElement = pageMain.querySelector(`a[href="#all"]`);
 const onAllMovieElementClick = () => {
   clearRenderedFilms();
   renderStartFilmsCards(films);
+  addFilmCardControlsItemActive(films);
 };
 
 allMovieElement.addEventListener(`click`, onAllMovieElementClick);
@@ -238,13 +250,7 @@ const removeActiveClass = (array, className) => {
     item.classList.remove(className);
   });
 };
-/*
-const addActiveClass = (array, className) => {
-  array.forEach((item) => {
-    item.classList.add(className);
-  });
-};
-*/
+
 export const sortByFieldAscending = (field) => {
   return (a, b) => a[field] > b[field] ? 1 : -1;
 };
@@ -263,19 +269,21 @@ const onSortMenuItemClick = (evt) => {
       clearRenderedFilms();
       films.sort(sortByFieldAscending(`id`));
       renderStartFilmsCards(films);
+      addFilmCardControlsItemActive(films);
 
       break;
     case `Sort by date`:
       clearRenderedFilms();
       films.sort(sortByFieldDescending(`release`));
-
       renderStartFilmsCards(films);
+      addFilmCardControlsItemActive(films);
 
       break;
     case `Sort by rating`:
       clearRenderedFilms();
       films.sort(sortByFieldDescending(`rating`));
       renderStartFilmsCards(films);
+      addFilmCardControlsItemActive(films);
 
       break;
     default:
@@ -288,16 +296,7 @@ sortMenuButtons.forEach((item) => {
 });
 
 // отрисовка Top rated & Most commented
-/*
-const renderTopFilmsCards = (array) => {
-  for (let topFilm of topFilmsList) {
-    for (let i = 0; i < TOP_FILMS_COUNT; i++) {
-      renderHtml(topFilm, createFilmCardTemplate(array[i]), `beforeend`);
-    }
-  }
-};
-renderTopFilmsCards(films);
-*/
+
 const filmsListExtraElements = document.querySelectorAll(`.films-list--extra`);
 const extraFilms = films.slice();
 

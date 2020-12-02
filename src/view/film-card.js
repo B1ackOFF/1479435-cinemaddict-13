@@ -9,7 +9,7 @@ const limitStr = (descriptionText, maxSymbols) => {
 };
 
 export const createFilmCardTemplate = (film) => {
-  const {id, title, rating, release, duration, genre, poster, description, comments} = film;
+  const {id, title, rating, release, duration, genre, poster, description, comments, isFavorite, isWatched, isWatchlist} = film;
 
   return `<article class="film-card" id="${id}">
   <h3 class="film-card__title">${title.translation}</h3>
@@ -21,6 +21,9 @@ export const createFilmCardTemplate = (film) => {
   </p>
   <img src="./images/posters/${poster}" alt="${title.original}" class="film-card__poster">
   <p class="film-card__description">${limitStr(description, MAX_SYMBOLS_DESCRIPTION)}</p>
+  <p class="film-card__isWatchlist">isWatchlist=${isWatchlist}</p>
+  <p class="film-card__isWatched">isWatched=${isWatched}</p>
+  <p class="film-card__isFavorite">isFavorite=${isFavorite}</p>
   <a class="film-card__comments">${comments} comments</a>
   <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
