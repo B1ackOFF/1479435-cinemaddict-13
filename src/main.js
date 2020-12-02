@@ -63,7 +63,9 @@ const addFilmCardControlsItemActive = (arrays) => {
   const historyButtons = pageFilms.querySelectorAll(`.film-card__controls-item--mark-as-watched`);
   const favoriteButtons = pageFilms.querySelectorAll(`.film-card__controls-item--favorite`);
 
-  /*  arrays.forEach((elem, index) => {
+  // этот участок кода выполняется(иконка избраное изначально отрисовывается с активныйм CSS классом, если в моках сгенерировано isFavorite:true) , но выдает ошибку.
+
+  /* arrays.forEach((elem, index) => {
     if (elem.isFavorite === true) {
       favoriteButtons[index].classList.add(`film-card__controls-item--active`);
     } else {
@@ -110,7 +112,6 @@ const renderStartFilmsCards = (array) => {
 renderStartFilmsCards(films);
 addFilmCardControlsItemActive(films);
 
-
 // Отрисовка дополнительной порции фильмов
 
 const renderPortionFilmsCards = () => {
@@ -126,21 +127,14 @@ const renderPortionFilmsCards = () => {
     }
     showMoreButton.classList.add(`visually-hidden`);
   }
-  const filmCardPosterAll = document.querySelectorAll(`.film-card__title`);
 
-  for (let filmCardPoster of filmCardPosterAll) {
-    filmCardPoster.setAttribute(`style`, `cursor: pointer;`);
-    filmCardPoster.addEventListener(`click`, renderFilmDetail);
-  }
+  openFilmDetailPopup();
   addFilmCardControlsItemActive(films);
 };
 
 showMoreButton.addEventListener(`click`, renderPortionFilmsCards);
 
 // отрисовка popup
-
-const filmCardPosterAll = document.querySelectorAll(`.film-card__title`);
-
 const renderFilmDetail = () => {
   renderHtml(pageFooter, createPopupTemplate(films[0]), `afterend`);
   const filmDetailsCloseBtn = document.querySelector(`.film-details__close-btn`);
@@ -148,11 +142,14 @@ const renderFilmDetail = () => {
   document.addEventListener(`keydown`, onPopupEscPress); // добавляет слушатель на клавишу ESC
 };
 
-for (let filmCardPoster of filmCardPosterAll) {
-  filmCardPoster.setAttribute(`style`, `cursor: pointer;`);
-  filmCardPoster.addEventListener(`click`, renderFilmDetail);
-}
-
+const openFilmDetailPopup = () => {
+  const filmCardPosterAll = document.querySelectorAll(`.film-card__title`);
+  for (let filmCardPoster of filmCardPosterAll) {
+    filmCardPoster.setAttribute(`style`, `cursor: pointer;`);
+    filmCardPoster.addEventListener(`click`, renderFilmDetail);
+  }
+};
+openFilmDetailPopup();
 // закрытие popup
 const removePopupHandler = () => {
   const filmDetails = document.querySelector(`.film-details`);
@@ -179,7 +176,7 @@ const onPopupClosePress = (evt) => {
 // Whatchlist
 
 const watchlistFilms = films.filter((item) => {
-  return item.isWatched === true;
+  return item.isWatchlist === true;
 });
 
 const watchlistElement = pageMain.querySelector(`a[href="#watchlist"]`);
@@ -189,6 +186,7 @@ const onWatchlistElementClick = () => {
   clearRenderedFilms();
   renderStartFilmsCards(watchlistFilms);
   addFilmCardControlsItemActive(watchlistFilms);
+  openFilmDetailPopup();
   showMoreButton.classList.add(`visually-hidden`);
 };
 
@@ -197,7 +195,7 @@ watchlistElement.addEventListener(`click`, onWatchlistElementClick);
 // History
 
 const historyFilms = films.filter((item) => {
-  return item.isWatchlist === true;
+  return item.isWatched === true;
 });
 
 const historyElement = pageMain.querySelector(`a[href="#history"]`);
@@ -207,6 +205,7 @@ const onHistoryElementClick = () => {
   clearRenderedFilms();
   renderStartFilmsCards(historyFilms);
   addFilmCardControlsItemActive(historyFilms);
+  openFilmDetailPopup();
   showMoreButton.classList.add(`visually-hidden`);
 };
 
@@ -225,6 +224,7 @@ const onFavoritesElementClick = () => {
   clearRenderedFilms();
   renderStartFilmsCards(favoritesFilms);
   addFilmCardControlsItemActive(favoritesFilms);
+  openFilmDetailPopup();
   showMoreButton.classList.add(`visually-hidden`);
 };
 
@@ -237,6 +237,7 @@ const onAllMovieElementClick = () => {
   clearRenderedFilms();
   renderStartFilmsCards(films);
   addFilmCardControlsItemActive(films);
+  openFilmDetailPopup();
 };
 
 allMovieElement.addEventListener(`click`, onAllMovieElementClick);
@@ -270,6 +271,7 @@ const onSortMenuItemClick = (evt) => {
       films.sort(sortByFieldAscending(`id`));
       renderStartFilmsCards(films);
       addFilmCardControlsItemActive(films);
+      openFilmDetailPopup();
 
       break;
     case `Sort by date`:
@@ -277,6 +279,7 @@ const onSortMenuItemClick = (evt) => {
       films.sort(sortByFieldDescending(`release`));
       renderStartFilmsCards(films);
       addFilmCardControlsItemActive(films);
+      openFilmDetailPopup();
 
       break;
     case `Sort by rating`:
@@ -284,6 +287,7 @@ const onSortMenuItemClick = (evt) => {
       films.sort(sortByFieldDescending(`rating`));
       renderStartFilmsCards(films);
       addFilmCardControlsItemActive(films);
+      openFilmDetailPopup();
 
       break;
     default:
