@@ -55,8 +55,36 @@ const clearRenderedFilms = () => {
   }
 };
 
+// кнопки Watchlist & History & Favorites
+
+const addFilmCardControlsItemActive = () => {
+  const pageFilms = document.querySelector(`.films`);
+  const watchlistButtons = pageFilms.querySelectorAll(`.film-card__controls-item--add-to-watchlist`);
+  const historyButtons = pageFilms.querySelectorAll(`.film-card__controls-item--mark-as-watched`);
+  const favoriteButtons = pageFilms.querySelectorAll(`.film-card__controls-item--favorite`);
+
+  watchlistButtons.forEach((element, index) => {
+    element.addEventListener(`click`, () => {
+      watchlistButtons[index].classList.toggle(`film-card__controls-item--active`);
+    });
+  });
+
+  historyButtons.forEach((element, index) => {
+    element.addEventListener(`click`, () => {
+      historyButtons[index].classList.toggle(`film-card__controls-item--active`);
+    });
+  });
+
+  favoriteButtons.forEach((element, index) => {
+    element.addEventListener(`click`, () => {
+      favoriteButtons[index].classList.toggle(`film-card__controls-item--active`);
+    });
+  });
+};
+
 // стартовая отрисовка фильмов
 const renderStartFilmsCards = (array) => {
+  clearRenderedFilms();
   showMoreButton.classList.remove(`visually-hidden`);
 
   if (array.length <= FILMS_COUNT) {
@@ -69,8 +97,11 @@ const renderStartFilmsCards = (array) => {
       renderHtml(filmsListContainer, createFilmCardTemplate(array[i]), `beforeend`);
     }
   }
+
 };
 renderStartFilmsCards(films);
+addFilmCardControlsItemActive();
+
 
 // Отрисовка дополнительной порции фильмов
 
@@ -93,6 +124,7 @@ const renderPortionFilmsCards = () => {
     filmCardPoster.setAttribute(`style`, `cursor: pointer;`);
     filmCardPoster.addEventListener(`click`, renderFilmDetail);
   }
+  addFilmCardControlsItemActive();
 };
 
 showMoreButton.addEventListener(`click`, renderPortionFilmsCards);
@@ -206,7 +238,13 @@ const removeActiveClass = (array, className) => {
     item.classList.remove(className);
   });
 };
-
+/*
+const addActiveClass = (array, className) => {
+  array.forEach((item) => {
+    item.classList.add(className);
+  });
+};
+*/
 export const sortByFieldAscending = (field) => {
   return (a, b) => a[field] > b[field] ? 1 : -1;
 };
@@ -279,12 +317,3 @@ filmsListExtraElements.forEach((element, index) => {
     }
   }
 });
-
-// кнопки Watchlist & History & Favorites
-/*
-const pageFilms = document.querySelector(`.films`);
-const addToWatchlistButton = pageFilms.querySelectorAll(`.film-card__controls-item--add-to-watchlist`);
-const addToHistoryButton = pageFilms.querySelectorAll(`.film-card__controls-item--mark-as-watched`);
-const addToFavoriteButton = pageFilms.querySelectorAll(`.film-card__controls-item--favorite`);
-*/
-
