@@ -57,7 +57,7 @@ const clearRenderedFilms = () => {
 
 // кнопки Watchlist & History & Favorites
 
-const addFilmCardControlsItemActive = (arrays) => {
+const addFilmCardControlsItemActive = (/*  arrays  */) => {
   const pageFilms = document.querySelector(`.films`);
   const watchlistButtons = pageFilms.querySelectorAll(`.film-card__controls-item--add-to-watchlist`);
   const historyButtons = pageFilms.querySelectorAll(`.film-card__controls-item--mark-as-watched`);
