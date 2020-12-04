@@ -85,19 +85,16 @@ const onSortMenuItemClick = (evt) => {
     case `Sort by default`:
       films.sort(sortByFieldAscending(`id`));
       renderStartFilmsCards(films);
-      // openFilmDetailPopup();
 
       break;
     case `Sort by date`:
       films.sort(sortByFieldDescending(`release`));
       renderStartFilmsCards(films);
-      // openFilmDetailPopup();
 
       break;
     case `Sort by rating`:
       films.sort(sortByFieldDescending(`rating`));
       renderStartFilmsCards(films);
-      // openFilmDetailPopup();
 
       break;
     default:
@@ -262,7 +259,6 @@ historyElement.children[0].textContent = `${historyFilms.length}`;
 
 const onHistoryElementClick = () => {
   renderStartFilmsCards(historyFilms);
-  // openFilmDetailPopup();
   showMoreButton.classList.add(`visually-hidden`);
 };
 
@@ -279,7 +275,6 @@ favoritesElement.children[0].textContent = `${ favoritesFilms.length}`;
 
 const onFavoritesElementClick = () => {
   renderStartFilmsCards(favoritesFilms);
-  // openFilmDetailPopup();
   showMoreButton.classList.add(`visually-hidden`);
 };
 
@@ -290,7 +285,6 @@ const allMovieElement = pageMain.querySelector(`a[href="#all"]`);
 
 const onAllMovieElementClick = () => {
   renderStartFilmsCards(films);
-  // openFilmDetailPopup();
 };
 
 allMovieElement.addEventListener(`click`, onAllMovieElementClick);
