@@ -45,205 +45,21 @@ const filmsList = pageMain.querySelector(`.films-list`);
 renderHtml(filmsList, createTopFilmsTemplate(), `afterend`);
 renderHtml(filmsList, createShowMoreTemplate(), `beforeend`);
 
-const filmsListContainer = filmsList.querySelector(`.films-list__container`);
+const filmsListContainer = document.querySelector(`.films-list__container`);
+const filmsListContainerAll = document.querySelectorAll(`.films-list__container`);
 const showMoreButton = filmsList.querySelector(`.films-list__show-more`);
 
+
 // очистка всех отрисованных фильмов
+
 const clearRenderedFilms = () => {
-  while (filmsListContainer.firstChild) {
-    filmsListContainer.removeChild(filmsListContainer.lastChild);
-  }
-};
-
-// кнопки Watchlist & History & Favorites
-
-const addFilmCardControlsItemActive = (/*  arrays  */) => {
-  const pageFilms = document.querySelector(`.films`);
-  const watchlistButtons = pageFilms.querySelectorAll(`.film-card__controls-item--add-to-watchlist`);
-  const historyButtons = pageFilms.querySelectorAll(`.film-card__controls-item--mark-as-watched`);
-  const favoriteButtons = pageFilms.querySelectorAll(`.film-card__controls-item--favorite`);
-
-  // этот участок кода выполняется(иконка избраное изначально отрисовывается с активныйм CSS классом, если в моках сгенерировано isFavorite:true) , но выдает ошибку.
-
-  /* arrays.forEach((elem, index) => {
-    if (elem.isFavorite === true) {
-      favoriteButtons[index].classList.add(`film-card__controls-item--active`);
-    } else {
-      favoriteButtons[index].classList.remove(`film-card__controls-item--active`);
-    }
-  });*/
-
-  watchlistButtons.forEach((element, index) => {
-    element.addEventListener(`click`, () => {
-      watchlistButtons[index].classList.toggle(`film-card__controls-item--active`);
-    });
-  });
-
-  historyButtons.forEach((element, index) => {
-    element.addEventListener(`click`, () => {
-      historyButtons[index].classList.toggle(`film-card__controls-item--active`);
-    });
-  });
-
-  favoriteButtons.forEach((element, index) => {
-    element.addEventListener(`click`, () => {
-      favoriteButtons[index].classList.toggle(`film-card__controls-item--active`);
-    });
-  });
-};
-
-// стартовая отрисовка фильмов
-const renderStartFilmsCards = (array) => {
-  clearRenderedFilms();
-  showMoreButton.classList.remove(`visually-hidden`);
-
-  if (array.length <= FILMS_COUNT) {
-    for (let i = 0; i < array.length; i++) {
-      renderHtml(filmsListContainer, createFilmCardTemplate(array[i]), `beforeend`);
-    }
-    showMoreButton.classList.add(`visually-hidden`);
-  } else {
-    for (let i = 0; i < FILMS_COUNT; i++) {
-      renderHtml(filmsListContainer, createFilmCardTemplate(array[i]), `beforeend`);
+  for (let film of filmsListContainerAll) {
+    while (film.firstChild) {
+      film.removeChild(film.lastChild);
     }
   }
-
 };
-renderStartFilmsCards(films);
-addFilmCardControlsItemActive(films);
-
-// Отрисовка дополнительной порции фильмов
-
-const renderPortionFilmsCards = () => {
-  clearRenderedFilms();
-  if (MAX_MOCK_FILMS_COUNT >= FILMS_COUNT * 2) {
-    for (let i = 0; i < FILMS_COUNT * 2; i++) {
-      renderHtml(filmsListContainer, createFilmCardTemplate(films[i]), `beforeend`);
-    }
-    showMoreButton.classList.add(`visually-hidden`);
-  } else {
-    for (let i = 0; i < MAX_MOCK_FILMS_COUNT; i++) {
-      renderHtml(filmsListContainer, createFilmCardTemplate(films[i]), `beforeend`);
-    }
-    showMoreButton.classList.add(`visually-hidden`);
-  }
-
-  openFilmDetailPopup();
-  addFilmCardControlsItemActive(films);
-};
-
-showMoreButton.addEventListener(`click`, renderPortionFilmsCards);
-
-// отрисовка popup
-const renderFilmDetail = () => {
-  renderHtml(pageFooter, createPopupTemplate(films[0]), `afterend`);
-  const filmDetailsCloseBtn = document.querySelector(`.film-details__close-btn`);
-  filmDetailsCloseBtn.addEventListener(`mousedown`, onPopupClosePress); // добавляет слушатель на кнопку close
-  document.addEventListener(`keydown`, onPopupEscPress); // добавляет слушатель на клавишу ESC
-};
-
-const openFilmDetailPopup = () => {
-  const filmCardPosterAll = document.querySelectorAll(`.film-card__title`);
-  for (let filmCardPoster of filmCardPosterAll) {
-    filmCardPoster.setAttribute(`style`, `cursor: pointer;`);
-    filmCardPoster.addEventListener(`click`, renderFilmDetail);
-  }
-};
-openFilmDetailPopup();
-// закрытие popup
-const removePopupHandler = () => {
-  const filmDetails = document.querySelector(`.film-details`);
-  if (filmDetails) {
-    filmDetails.parentNode.removeChild(filmDetails);
-  }
-};
-
-const onPopupEscPress = (evt) => {
-  if (evt.key === KeyboardKeys.ESCAPE) {
-    evt.preventDefault();
-    removePopupHandler();
-    document.removeEventListener(`keydown`, onPopupEscPress);
-  }
-};
-
-const onPopupClosePress = (evt) => {
-  if (evt.button === MouseButtons.MAIN) {
-    evt.preventDefault();
-    removePopupHandler();
-  }
-};
-
-// Whatchlist
-
-const watchlistFilms = films.filter((item) => {
-  return item.isWatchlist === true;
-});
-
-const watchlistElement = pageMain.querySelector(`a[href="#watchlist"]`);
-watchlistElement.children[0].textContent = `${watchlistFilms.length}`;
-
-const onWatchlistElementClick = () => {
-  clearRenderedFilms();
-  renderStartFilmsCards(watchlistFilms);
-  addFilmCardControlsItemActive(watchlistFilms);
-  openFilmDetailPopup();
-  showMoreButton.classList.add(`visually-hidden`);
-};
-
-watchlistElement.addEventListener(`click`, onWatchlistElementClick);
-
-// History
-
-const historyFilms = films.filter((item) => {
-  return item.isWatched === true;
-});
-
-const historyElement = pageMain.querySelector(`a[href="#history"]`);
-historyElement.children[0].textContent = `${historyFilms.length}`;
-
-const onHistoryElementClick = () => {
-  clearRenderedFilms();
-  renderStartFilmsCards(historyFilms);
-  addFilmCardControlsItemActive(historyFilms);
-  openFilmDetailPopup();
-  showMoreButton.classList.add(`visually-hidden`);
-};
-
-historyElement.addEventListener(`click`, onHistoryElementClick);
-
-// Favorites
-
-const favoritesFilms = films.filter((item) => {
-  return item.isFavorite === true;
-});
-
-const favoritesElement = pageMain.querySelector(`a[href="#favorites"]`);
-favoritesElement.children[0].textContent = `${ favoritesFilms.length}`;
-
-const onFavoritesElementClick = () => {
-  clearRenderedFilms();
-  renderStartFilmsCards(favoritesFilms);
-  addFilmCardControlsItemActive(favoritesFilms);
-  openFilmDetailPopup();
-  showMoreButton.classList.add(`visually-hidden`);
-};
-
-favoritesElement.addEventListener(`click`, onFavoritesElementClick);
-
-// All movie
-const allMovieElement = pageMain.querySelector(`a[href="#all"]`);
-
-const onAllMovieElementClick = () => {
-  clearRenderedFilms();
-  renderStartFilmsCards(films);
-  addFilmCardControlsItemActive(films);
-  openFilmDetailPopup();
-};
-
-allMovieElement.addEventListener(`click`, onAllMovieElementClick);
-
 // Sort
-
 const sortMenuButtons = document.querySelectorAll(`.sort__button`);
 
 const removeActiveClass = (array, className) => {
@@ -267,27 +83,21 @@ const onSortMenuItemClick = (evt) => {
 
   switch (evt.target.textContent) {
     case `Sort by default`:
-      clearRenderedFilms();
       films.sort(sortByFieldAscending(`id`));
       renderStartFilmsCards(films);
-      addFilmCardControlsItemActive(films);
-      openFilmDetailPopup();
+      // openFilmDetailPopup();
 
       break;
     case `Sort by date`:
-      clearRenderedFilms();
       films.sort(sortByFieldDescending(`release`));
       renderStartFilmsCards(films);
-      addFilmCardControlsItemActive(films);
-      openFilmDetailPopup();
+      // openFilmDetailPopup();
 
       break;
     case `Sort by rating`:
-      clearRenderedFilms();
       films.sort(sortByFieldDescending(`rating`));
       renderStartFilmsCards(films);
-      addFilmCardControlsItemActive(films);
-      openFilmDetailPopup();
+      // openFilmDetailPopup();
 
       break;
     default:
@@ -300,23 +110,187 @@ sortMenuButtons.forEach((item) => {
 });
 
 // отрисовка Top rated & Most commented
+const renderFilmsListExtraElements = () => {
+  const filmsListExtraElements = document.querySelectorAll(`.films-list--extra`);
+  const extraFilms = films.slice();
 
-const filmsListExtraElements = document.querySelectorAll(`.films-list--extra`);
-const extraFilms = films.slice();
+  const topRatedFilms = extraFilms.sort(sortByFieldDescending(`rating`)).slice(0, EXTRA_FILMS_COUNT);
+  const mostCommentedFilms = extraFilms.sort(sortByFieldDescending(`comments`)).slice(0, EXTRA_FILMS_COUNT);
 
-const topRatedFilms = extraFilms.sort(sortByFieldDescending(`rating`)).slice(0, EXTRA_FILMS_COUNT);
-const mostCommentedFilms = extraFilms.sort(sortByFieldDescending(`comments`)).slice(0, EXTRA_FILMS_COUNT);
+  filmsListExtraElements.forEach((element, index) => {
+    const filmsListExtraContainerElement = element.querySelector(`.films-list__container`);
 
-filmsListExtraElements.forEach((element, index) => {
-  const filmsListExtraContainerElement = element.querySelector(`.films-list__container`);
-
-  if (index === 0) {
-    for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-      renderHtml(filmsListExtraContainerElement, createFilmCardTemplate(topRatedFilms[i]), `beforeend`);
+    if (index === 0) {
+      for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
+        renderHtml(filmsListExtraContainerElement, createFilmCardTemplate(topRatedFilms[i]), `beforeend`);
+      }
+    } else {
+      for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
+        renderHtml(filmsListExtraContainerElement, createFilmCardTemplate(mostCommentedFilms[i]), `beforeend`);
+      }
     }
+  });
+};
+// отрисовка popup
+const renderFilmDetail = () => {
+  renderHtml(pageFooter, createPopupTemplate(films[0]), `afterend`);
+  const filmDetailsCloseBtn = document.querySelector(`.film-details__close-btn`);
+  filmDetailsCloseBtn.addEventListener(`mousedown`, onPopupClosePress); // добавляет слушатель на кнопку close
+  document.addEventListener(`keydown`, onPopupEscPress); // добавляет слушатель на клавишу ESC
+};
+
+const openFilmDetailPopup = () => {
+  const filmCardPosterAll = document.querySelectorAll(`.film-card__title`);
+  for (let filmCardPoster of filmCardPosterAll) {
+    filmCardPoster.setAttribute(`style`, `cursor: pointer;`);
+    filmCardPoster.addEventListener(`click`, renderFilmDetail);
+  }
+};
+// закрытие popup
+const removePopupHandler = () => {
+  const filmDetails = document.querySelector(`.film-details`);
+  if (filmDetails) {
+    filmDetails.parentNode.removeChild(filmDetails);
+  }
+};
+
+const onPopupEscPress = (evt) => {
+  if (evt.key === KeyboardKeys.ESCAPE) {
+    evt.preventDefault();
+    removePopupHandler();
+    document.removeEventListener(`keydown`, onPopupEscPress);
+  }
+};
+
+const onPopupClosePress = (evt) => {
+  if (evt.button === MouseButtons.MAIN) {
+    evt.preventDefault();
+    removePopupHandler();
+  }
+};
+// кнопки Watchlist & History & Favorites
+const addFilmCardControlsItemActive = (/*  arrays  */) => {
+  const pageFilms = document.querySelector(`.films`);
+  const filmCardControlsItems = pageFilms.querySelectorAll(`.film-card__controls-item`);
+
+  // этот участок кода выполняется(иконка избраное изначально отрисовывается с активныйм CSS классом, если в моках сгенерировано isFavorite:true) , но выдает ошибку.
+
+  /* arrays.forEach((elem, index) => {
+    if (elem.isFavorite === true) {
+      favoriteButtons[index].classList.add(`film-card__controls-item--active`);
+    } else {
+      favoriteButtons[index].classList.remove(`film-card__controls-item--active`);
+    }
+  });*/
+
+  filmCardControlsItems.forEach((element, index) => {
+    element.addEventListener(`click`, () => {
+      filmCardControlsItems[index].classList.toggle(`film-card__controls-item--active`);
+    });
+  });
+};
+
+// стартовая отрисовка фильмов
+const renderStartFilmsCards = (array) => {
+  clearRenderedFilms();
+  showMoreButton.classList.remove(`visually-hidden`);
+
+  if (array.length <= FILMS_COUNT) {
+    for (let i = 0; i < array.length; i++) {
+      renderHtml(filmsListContainer, createFilmCardTemplate(array[i]), `beforeend`);
+    }
+    showMoreButton.classList.add(`visually-hidden`);
   } else {
-    for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-      renderHtml(filmsListExtraContainerElement, createFilmCardTemplate(mostCommentedFilms[i]), `beforeend`);
+    for (let i = 0; i < FILMS_COUNT; i++) {
+      renderHtml(filmsListContainer, createFilmCardTemplate(array[i]), `beforeend`);
     }
   }
+  renderFilmsListExtraElements();
+  addFilmCardControlsItemActive();
+  openFilmDetailPopup();
+};
+renderStartFilmsCards(films);
+
+
+// Отрисовка дополнительной порции фильмов
+
+const renderPortionFilmsCards = () => {
+  clearRenderedFilms();
+  if (MAX_MOCK_FILMS_COUNT >= FILMS_COUNT * 2) {
+    for (let i = 0; i < FILMS_COUNT * 2; i++) {
+      renderHtml(filmsListContainer, createFilmCardTemplate(films[i]), `beforeend`);
+    }
+    showMoreButton.classList.add(`visually-hidden`);
+  } else {
+    for (let i = 0; i < MAX_MOCK_FILMS_COUNT; i++) {
+      renderHtml(filmsListContainer, createFilmCardTemplate(films[i]), `beforeend`);
+    }
+    showMoreButton.classList.add(`visually-hidden`);
+  }
+  renderFilmsListExtraElements();
+  addFilmCardControlsItemActive();
+  openFilmDetailPopup();
+};
+
+showMoreButton.addEventListener(`click`, renderPortionFilmsCards);
+
+// Whatchlist
+
+const watchlistFilms = films.filter((item) => {
+  return item.isWatchlist === true;
 });
+
+const watchlistElement = pageMain.querySelector(`a[href="#watchlist"]`);
+watchlistElement.children[0].textContent = `${watchlistFilms.length}`;
+
+const onWatchlistElementClick = () => {
+  renderStartFilmsCards(watchlistFilms);
+  // openFilmDetailPopup();
+  showMoreButton.classList.add(`visually-hidden`);
+};
+
+watchlistElement.addEventListener(`click`, onWatchlistElementClick);
+
+// History
+
+const historyFilms = films.filter((item) => {
+  return item.isWatched === true;
+});
+
+const historyElement = pageMain.querySelector(`a[href="#history"]`);
+historyElement.children[0].textContent = `${historyFilms.length}`;
+
+const onHistoryElementClick = () => {
+  renderStartFilmsCards(historyFilms);
+  // openFilmDetailPopup();
+  showMoreButton.classList.add(`visually-hidden`);
+};
+
+historyElement.addEventListener(`click`, onHistoryElementClick);
+
+// Favorites
+
+const favoritesFilms = films.filter((item) => {
+  return item.isFavorite === true;
+});
+
+const favoritesElement = pageMain.querySelector(`a[href="#favorites"]`);
+favoritesElement.children[0].textContent = `${ favoritesFilms.length}`;
+
+const onFavoritesElementClick = () => {
+  renderStartFilmsCards(favoritesFilms);
+  // openFilmDetailPopup();
+  showMoreButton.classList.add(`visually-hidden`);
+};
+
+favoritesElement.addEventListener(`click`, onFavoritesElementClick);
+
+// All movie
+const allMovieElement = pageMain.querySelector(`a[href="#all"]`);
+
+const onAllMovieElementClick = () => {
+  renderStartFilmsCards(films);
+  // openFilmDetailPopup();
+};
+
+allMovieElement.addEventListener(`click`, onAllMovieElementClick);
