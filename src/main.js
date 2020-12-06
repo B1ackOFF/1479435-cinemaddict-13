@@ -166,19 +166,18 @@ const onPopupClosePress = (evt) => {
   }
 };
 // кнопки Watchlist & History & Favorites
-const addFilmCardControlsItemActive = (/*  arrays  */) => {
+const addFilmCardControlsItemActive = (arrays) => {
   const pageFilms = document.querySelector(`.films`);
   const filmCardControlsItems = pageFilms.querySelectorAll(`.film-card__controls-item`);
+  const filmCardControlsItemsFavorite = pageFilms.querySelectorAll(`.film-card__controls-item--favorite`);
 
-  // этот участок кода выполняется(иконка избраное изначально отрисовывается с активныйм CSS классом, если в моках сгенерировано isFavorite:true) , но выдает ошибку.
-
-  /* arrays.forEach((elem, index) => {
+  arrays.forEach((elem, index) => {
     if (elem.isFavorite === true) {
-      favoriteButtons[index].classList.add(`film-card__controls-item--active`);
+      filmCardControlsItemsFavorite[index].classList.add(`film-card__controls-item--active`);
     } else {
-      favoriteButtons[index].classList.remove(`film-card__controls-item--active`);
+      filmCardControlsItemsFavorite[index].classList.remove(`film-card__controls-item--active`);
     }
-  });*/
+  });
 
   filmCardControlsItems.forEach((element, index) => {
     element.addEventListener(`click`, () => {
@@ -203,7 +202,7 @@ const renderStartFilmsCards = (array) => {
     }
   }
   renderFilmsListExtraElements();
-  addFilmCardControlsItemActive();
+  addFilmCardControlsItemActive(films);
   openFilmDetailPopup();
 };
 renderStartFilmsCards(films);
@@ -225,7 +224,7 @@ const renderPortionFilmsCards = () => {
     showMoreButton.classList.add(`visually-hidden`);
   }
   renderFilmsListExtraElements();
-  addFilmCardControlsItemActive();
+  addFilmCardControlsItemActive(films);
   openFilmDetailPopup();
 };
 
